@@ -6,10 +6,9 @@ class StackEmptyError(IndexError):
 class Stack(object):
     """LIFO stack implemented via restriction on python list functionality.
     __Methods__: __init__, __repr__, __iter__
-    User Methods: push, pop, peek, is_empty, empty
+    User Methods: push, pop, peek, is_empty, empty, length
     Attributes: length
     """
-    length = len(self._list)
 
     def __init__(self, inlist=None):
         """You can initialize this Stack with an existing list, otherwise
@@ -47,6 +46,11 @@ class Stack(object):
 
         self._list = []
 
+    def length(self):
+        """Return length of stack."""
+
+        return len(self._list)
+
     def __iter__(self):
         """Allows for iteration over the stack"""
         while True:
@@ -62,25 +66,43 @@ class Stack(object):
             return "<Stack head:{} length:{}".format(self._list[-1], 
                 self.length)
 
-def are_parens_balanced(string):
+def opposite_char(string):
+    """takes on side of a paren and gives the other side
+    sidedness matters"""
+    if string == '{':
+        return '}'
+    elif string == '[':
+        return ']'
+    elif string == '(':
+        return ')'
+
+def is_balanced(string):
     """Checks to see if parentheses in a string are balanced properly.
     Handles (), [], and {}."""
 
     # Initialize the the stack 
     parens = Stack()
-
     for char in string:
-
         if char in ['(', '[', '{']:
             parens.push(char)
         elif char in [')', ']', '}']:
-            if parens.is_empty() or char != parens.peek():
+            if parens.is_empty():
             # There are no more to match with or the parens type doesn't match
-                return false
-            elif char == parens.peek():
-                parens.pop()
+                return False
+            if char == opposite_char(parens.peek()):
+                a = parens.pop()
                 
     return parens.is_empty()
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 2:
+        for arg in sys.argv[1:]:
+            if is_balanced(arg):
+                print arg + 'is balanced.'
+            else:
+                print arg + 'is not balanced.'
+
 
 
 
